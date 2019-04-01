@@ -128,7 +128,7 @@ module.exports = class Node {
     } // Node#delete
 
     /**
-     * Adds an event handler to the current Node.
+     * Adds an event listener to the current Node.
      * @param {(string|symbol)} event The name of the event.
      * @param {function} callback The event callback.
      * @returns {Node} The current Node.
@@ -150,7 +150,7 @@ module.exports = class Node {
     } // Node#on
 
     /**
-     * Adds an event handler to the current Node for a single call.
+     * Adds an event listener to the current Node for a single call.
      * @param {(string|symbol)} event The name of the event.
      * @param {function} callback The event callback.
      * @returns {Node} The current Node.
@@ -172,7 +172,7 @@ module.exports = class Node {
     } // Node#once
 
     /**
-     * Removes an event handler from the current Node.
+     * Removes an event listener from the current Node.
      * @param {(string|symbol)} event The name of the event.
      * @param {function} callback The event callback.
      * @returns {Node} The current Node.
