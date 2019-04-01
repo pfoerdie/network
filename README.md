@@ -16,19 +16,19 @@ This is the base class and used to create networks of Nodes. Each Node is associ
     > An alias for Node#detach, reversing current Node and argument.
 - delete( confirm:boolean = false )
     > Removes all ingoing and outgoing connections of the current Node and deletes it permanently.
-- on( event:(string|symbol), callback:function )
+- on( event:string|symbol, callback:function )
     > Adds an event listener to the current Node.
-- once( event:(string|symbol), callback:function )
+- once( event:string|symbol, callback:function )
     > Adds an event listener to the current Node for a single call.
-- off( event:(string|symbol), callback:function )
+- off( event:string|symbol, callback:function )
     > Removes an event listener from the current Node.
-- trigger( event:(string|symbol), ...args:any )
+- trigger( event:string|symbol, ...args:any )
     > Triggers an event on the current Node with assigned arguments on the next event loop.
-- emit( event:(string|symbol), ...args:any )
+- emit( event:string|symbol, ...args:any )
     > Emits an event to all children of the current Node with assigned arguments.
-- emitBack( event:(string|symbol), ...args:any )
+- emitBack( event:string|symbol, ...args:any )
     > Emits an event to all parents of the current Node with assigned arguments.
-- static isNode( node:(Node|*) ):boolean
+- static isNode( node:Node|* ):boolean
     > Indicates if an object is a valid Node.
 - static createNode( data:object = null ):Node
     > An alias for Node#constructor, but as function.
