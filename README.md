@@ -28,7 +28,5 @@ This is the base class and used to create networks of Nodes. Each Node is associ
     > Emits an event to all children of the current Node with assigned arguments.
 - emitBack( event:string|symbol, ...args:any )
     > Emits an event to all parents of the current Node with assigned arguments.
-- static isNode( node:Node|* ):boolean
+- static \[Symbol.hasInstance]( node:Node|* ):boolean
     > Indicates if an object is a valid Node.
-- static createNode( data:object = null ):Node
-    > An alias for Node#constructor, but as function.
