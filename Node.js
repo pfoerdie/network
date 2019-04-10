@@ -8,10 +8,8 @@ const _private = new WeakMap();
  * connected graphs, neural networks, process structures and finite automatons are made easy.
  * @class
  * @throws {TypeError} Every method will throw a TypeError, if arguments are not as specified.
- * @module  Node
- * @author Simon Petrac <pfoerdie@gmail.com>
  */
-module.exports = class Node {
+class Node {
 
     /**
      * Constructs a new Node to use with other Nodes.
@@ -44,11 +42,11 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     attach(node) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (this === node)
             throw new Error("You must not attach a Node to itself.");
-        if (!Node.isNode(node))
+        if (!(node instanceof Node))
             throw new TypeError("You can only attach valid Nodes.");
 
         _private.get(this).children.add(node);
@@ -64,11 +62,11 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     attachTo(node) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (this === node)
             throw new Error("You must not attach a Node to itself.");
-        if (!Node.isNode(node))
+        if (!(node instanceof Node))
             throw new TypeError("You can only attach to valid Nodes.");
 
         node.attach(this);
@@ -82,9 +80,9 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     detach(node) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
-        if (!Node.isNode(node))
+        if (!(node instanceof Node))
             throw new TypeError("Detaching requires a valid Node.");
 
         if (_private.get(this).children.delete(node))
@@ -99,9 +97,9 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     detachFrom(node) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
-        if (!Node.isNode(node))
+        if (!(node instanceof Node))
             throw new TypeError("You can only detach from valid Nodes.");
 
         node.detach(this);
@@ -116,7 +114,7 @@ module.exports = class Node {
      * @returns {undefined} Nothing to return any more.
      */
     delete(confirm = false) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (!confirm)
             throw new Error("Deletion without confirmation will throw an error.");
@@ -134,7 +132,7 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     on(event, callback) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
             throw new TypeError("An event is identified by a string or a symbol.");
@@ -156,7 +154,7 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     once(event, callback) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
             throw new TypeError("An event is identified by a string or a symbol.");
@@ -178,7 +176,7 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     off(event, callback) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
         if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
             throw new TypeError("An event is identified by a string or a symbol.");
@@ -199,24 +197,14 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     trigger(event, ...args) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
 
         let { events } = _private.get(this);
         if (Reflect.has(events, event) && events[event].size > 0)
             events[event].forEach((once, callback, map) => {
                 if (once) map.delete(callback);
-                setImmediate(() => {
-                    try {
-                        // Prevents errors if a callback fails.
-                        let tmp = callback.apply(this, args);
-                        if (tmp instanceof Promise)
-                            tmp.catch(err => console.error(err));
-                    } catch (err) {
-                        // The logging might be removed for productive use.
-                        console.error(err);
-                    }
-                });
+                setImmediate(() => _makeEventCall.call(this, callback, args));
             });
 
         return this;
@@ -229,7 +217,7 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     emit(event, ...args) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
 
         let { children } = _private.get(this);
@@ -245,7 +233,7 @@ module.exports = class Node {
      * @returns {Node} The current Node.
      */
     emitBack(event, ...args) {
-        if (!Node.isNode(this))
+        if (!(this instanceof Node))
             throw new TypeError("Function call on an invalid Node.");
 
         let { parents } = _private.get(this);
@@ -256,20 +244,38 @@ module.exports = class Node {
 
     /**
      * Indicates if an object is a valid Node.
-     * @param {(Node|*)} node The object to test.
-     * @returns {boolean} Indicator for the object.
+     * @param {(Node|*)} instance The instance to be tested.
+     * @returns {boolean} Indicator for been a Node.
      */
-    static isNode(node) {
-        return node instanceof Node && _private.has(node);
-    } // Node.isNode
+    static [Symbol.hasInstance](instance) {
+        return _private.has(instance);
+    } // Node[Symbol.hasInstance]
 
-    /**
-     * An alias for Node#constructor, but as function.
-     * @param {object} [data=null] The data associated with the new Node.
-     * @returns {Node} The newly created Node.
-     */
-    static createNode(data = null) {
-        return new Node(data);
-    } // Node.createNode
+} // Node
 
-}; // Node
+/**
+ * Makes the actual call to an event callback, ignoring all errors.
+ * @param {function} callback The callback of an event.
+ * @param {Array} args The arguments passed to the trigger function.
+ * @this {Node} The current Node for this call.
+ * @private
+ */
+function _makeEventCall(callback, args) {
+    // Just return, if the Node has been deleted in the meantime.
+    if (!(this instanceof Node)) return;
+    try {
+        // Prevents errors if a callback fails.
+        let result = callback.call(this, ...args);
+        if (result instanceof Promise)
+            result.catch(err => console.error(err));
+    } catch (err) {
+        // The logging might be removed for productive use.
+        console.error(err);
+    }
+} // _makeEventCall
+
+/**
+ * @module  Node
+ * @author Simon Petrac <pfoerdie@gmail.com>
+ */
+module.exports = Node;
