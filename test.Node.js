@@ -25,6 +25,7 @@ n2
     .attach(n1)
     .on('test', function (str) {
         console.log(str);
+        console.log(this);
     });
 
 function countUp(lastCount) {

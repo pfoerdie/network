@@ -33,10 +33,11 @@ class Node {
 
         Object.defineProperties(this, {
             data: {
-                get: () => data,
-                set: (value) => data === null && typeof value === 'object'
-                    ? data = value
-                    : undefined
+                value: data,
+                // get: () => data,
+                // set: (value) => data === null && typeof value === 'object'
+                //     ? data = value
+                //     : undefined
             }
         });
 
@@ -54,11 +55,11 @@ class Node {
      * @returns {Node} The current Node.
      */
     attach(node) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
         if (this === node)
             throw new Error("You must not attach a Node to itself.");
-        if (!(Node.isNode(node)))
+        if (!(_isNode(node)))
             throw new TypeError("You can only attach valid Nodes.");
 
         _private.get(this).children.add(node);
@@ -74,11 +75,11 @@ class Node {
      * @returns {Node} The current Node.
      */
     attachTo(node) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
         if (this === node)
             throw new Error("You must not attach a Node to itself.");
-        if (!(Node.isNode(node)))
+        if (!(_isNode(node)))
             throw new TypeError("You can only attach to valid Nodes.");
 
         node.attach(this);
@@ -92,9 +93,9 @@ class Node {
      * @returns {Node} The current Node.
      */
     detach(node) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
-        if (!(Node.isNode(node)))
+        if (!(_isNode(node)))
             throw new TypeError("Detaching requires a valid Node.");
 
         if (_private.get(this).children.delete(node))
@@ -109,15 +110,35 @@ class Node {
      * @returns {Node} The current Node.
      */
     detachFrom(node) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
-        if (!(Node.isNode(node)))
+        if (!(_isNode(node)))
             throw new TypeError("You can only detach from valid Nodes.");
 
         node.detach(this);
 
         return this;
     } // Node#detachFrom
+
+    /**
+     * Removes all ingoing and outgoing connections of the current Node and deletes it permanently.
+     * @param {boolean} [confirm=false] You must confirm deletion.
+     * @throws {Error} Throws an error, if you do not confirm the deletion.
+     * @returns {undefined} Nothing to return any more.
+     */
+    delete(confirm = false) {
+        if (!(_isNode(this)))
+            throw new TypeError("Function call on an invalid Node.");
+        if (!confirm)
+            throw new Error("Deletion without confirmation will throw an error.");
+
+        const { parents, children } = _private.get(this);
+        parents.forEach(parent => _private.get(parent).children.delete(this));
+        children.forEach(child => _private.get(child).parents.delete(this));
+
+        _deleted.add(this);
+        _private.delete(this);
+    } // Node#delete
 
     /**
      * Indicates if a Node has been deleted.
@@ -128,37 +149,16 @@ class Node {
     } // Node#deleted
 
     /**
-     * Removes all ingoing and outgoing connections of the current Node and deletes it permanently.
-     * @param {boolean} [confirm=false] You must confirm deletion.
-     * @throws {Error} Throws an error, if you do not confirm the deletion.
-     * @returns {undefined} Nothing to return any more.
-     */
-    delete(confirm = false) {
-        if (!(Node.isNode(this)))
-            throw new TypeError("Function call on an invalid Node.");
-        if (!confirm)
-            throw new Error("Deletion without confirmation will throw an error.");
-
-        const { parents, children } = _private.get(this);
-        parents.forEach(parent => _private.get(parent).children.delete(this));
-        children.forEach(child => _private.get(child).parents.delete(this));
-        _deleted.add(this);
-        _private.delete(this);
-    } // Node#delete
-
-    /**
      * Adds an event listener to the current Node.
      * @param {(string|symbol)} event The name of the event.
      * @param {function} callback The event callback.
      * @returns {Node} The current Node.
      */
     on(event, callback) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
-        if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
-            throw new TypeError("An event is identified by a string or a symbol.");
-        if (typeof callback !== 'function')
-            throw new TypeError("Adding an event listener requires a callback function.");
+        if (!(_isEvent(event, callback)))
+            throw new TypeError("An event is identified by a string or a symbol and a callback function.");
 
         let { events } = _private.get(this);
         if (!Reflect.has(events, event))
@@ -175,12 +175,10 @@ class Node {
      * @returns {Node} The current Node.
      */
     once(event, callback) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
-        if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
-            throw new TypeError("An event is identified by a string or a symbol.");
-        if (typeof callback !== 'function')
-            throw new TypeError("Adding an event listener requires a callback function.");
+        if (!(_isEvent(event, callback)))
+            throw new TypeError("An event is identified by a string or a symbol and a callback function.");
 
         let { events } = _private.get(this);
         if (!Reflect.has(events, event))
@@ -197,12 +195,10 @@ class Node {
      * @returns {Node} The current Node.
      */
     off(event, callback) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
-        if (!event || (typeof event !== 'string' && typeof event !== 'symbol'))
-            throw new TypeError("An event is identified by a string or a symbol.");
-        if (typeof callback !== 'function')
-            throw new TypeError("Removing an event listener requires the callback function to remove.");
+        if (!(_isEvent(event, callback)))
+            throw new TypeError("An event is identified by a string or a symbol and a callback function.");
 
         let { events } = _private.get(this);
         if (Reflect.has(events, event))
@@ -218,7 +214,7 @@ class Node {
      * @returns {Node} The current Node.
      */
     trigger(event, ...args) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
 
         let { events } = _private.get(this);
@@ -238,7 +234,7 @@ class Node {
      * @returns {Node} The current Node.
      */
     emit(event, ...args) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
 
         let { children } = _private.get(this);
@@ -254,7 +250,7 @@ class Node {
      * @returns {Node} The current Node.
      */
     emitBack(event, ...args) {
-        if (!(Node.isNode(this)))
+        if (!(_isNode(this)))
             throw new TypeError("Function call on an invalid Node.");
 
         let { parents } = _private.get(this);
@@ -263,19 +259,35 @@ class Node {
         return this;
     } // Node#emitBack
 
+    /**
+     * Indicates if an object is a valid Node.
+     * @param {(Node|*)} instance The instance to be tested.
+     * @returns {boolean} Indicator for been a Node.
+     */
     static get isNode() {
         return _isNode;
-    } // Node.isNode
+    } // _isNode
 
 } // Node
 
 /**
- * 
- * @param {(Node|*)} instance 
+ * Indicates if an object is a valid Node.
+ * @param {(Node|*)} instance The instance to be tested.
+ * @returns {boolean} Indicator for been a Node.
  */
 function _isNode(instance) {
     return (instance instanceof Node) && !_deleted.has(this);
 } // _isNode
+
+/**
+ * Indicates if event name and callback for an event have valid types.
+ * @param {(string|*)} event The event name to be tested.
+ * @param {(function|*)} callback The callback to be tested.
+ * @returns {boolean} Indicator for been a valid event.
+ */
+function _isEvent(event, callback) {
+    return event && (typeof event === 'string' || typeof event === 'symbol') && typeof callback === 'function';
+} // _isEvent
 
 /**
  * Makes the actual call to an event callback, ignoring all errors.
