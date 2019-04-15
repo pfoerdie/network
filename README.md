@@ -16,6 +16,8 @@ This is the base class and used to create networks of Nodes. Each Node is associ
     > An alias for Node#detach, reversing current Node and argument.
 - delete( confirm:boolean = false )
     > Removes all ingoing and outgoing connections of the current Node and deletes it permanently.
+- deleted:boolean
+    > Indicates, if a Node has been deleted.
 - on( event:string|symbol, callback:function )
     > Adds an event listener to the current Node.
 - once( event:string|symbol, callback:function )
@@ -28,5 +30,5 @@ This is the base class and used to create networks of Nodes. Each Node is associ
     > Emits an event to all children of the current Node with assigned arguments.
 - emitBack( event:string|symbol, ...args:any )
     > Emits an event to all parents of the current Node with assigned arguments.
-- static \[Symbol.hasInstance]( node:Node|* ):boolean
+- static isNode( instance:Node|* ):boolean
     > Indicates if an object is a valid Node.

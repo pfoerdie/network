@@ -141,7 +141,7 @@ class Node {
     } // Node#delete
 
     /**
-     * Indicates if a Node has been deleted.
+     * Indicates, if a Node has been deleted.
      * @type {boolean}
      */
     get deleted() {
