@@ -6,7 +6,8 @@
 const _private = new WeakMap();
 
 /**
- * Indicates the deleted Nodes.
+ * Indicates the deleted Nodes. If no reference to the deleted Node exists,
+ * it will be removed from the WeakSet automatically.
  * @type {WeakSet<Node>}
  * @private
  */
@@ -34,6 +35,7 @@ class Node {
         Object.defineProperties(this, {
             data: {
                 value: data,
+                // NOTE optional: make late-assignment possible
                 // get: () => data,
                 // set: (value) => data === null && typeof value === 'object'
                 //     ? data = value
@@ -264,8 +266,8 @@ class Node {
      * @param {(Node|*)} instance The instance to be tested.
      * @returns {boolean} Indicator for been a Node.
      */
-    static get isNode() {
-        return _isNode;
+    static isNode(instance) {
+        return _isNode(instance);
     } // _isNode
 
 } // Node
@@ -276,7 +278,7 @@ class Node {
  * @returns {boolean} Indicator for been a Node.
  */
 function _isNode(instance) {
-    return (instance instanceof Node) && !_deleted.has(this);
+    return (instance instanceof Node) && !_deleted.has(instance);
 } // _isNode
 
 /**
@@ -286,7 +288,8 @@ function _isNode(instance) {
  * @returns {boolean} Indicator for been a valid event.
  */
 function _isEvent(event, callback) {
-    return event && (typeof event === 'string' || typeof event === 'symbol') && typeof callback === 'function';
+    return event && (typeof event === 'string' || typeof event === 'symbol')
+        && typeof callback === 'function';
 } // _isEvent
 
 /**
@@ -301,11 +304,11 @@ function _makeEventCall(scope, callback, args) {
     return setImmediate(() => {
         // Prevents errors if a callback fails.
         try {
-            let result = callback.call(scope, ...args);
+            let result = callback.apply(scope, args);
             if (result instanceof Promise)
                 result.catch(err => console.error(err));
         } catch (err) {
-            // The logging might be removed for productive use.
+            // NOTE The logging might be removed for productive use.
             console.error(err);
         }
     });
