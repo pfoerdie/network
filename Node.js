@@ -138,6 +138,8 @@ class Node {
         parents.forEach(parent => _private.get(parent).children.delete(this));
         children.forEach(child => _private.get(child).parents.delete(this));
 
+        // TODO evaluate if it is necessary to call detach for all children and detachFrom for all parents
+
         _deleted.add(this);
         _private.delete(this);
     } // Node#delete
