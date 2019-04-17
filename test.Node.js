@@ -48,6 +48,7 @@ for (let i = 0; i < SIZE; i++) {
         nodes[i].attachTo(nodes[i - 1]);
 }
 nodes[0].attachTo(nodes[SIZE - 1]);
+// nodes[0].attachTo(nodes[1]); // interesting
 console.timeEnd("build network");
 
 counter.start();
