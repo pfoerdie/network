@@ -13,6 +13,8 @@ const _private = new WeakMap();
  */
 const _deleted = new WeakSet();
 
+// IDEA implement private Edge class to connect Nodes => think about the event-calls
+
 /**
  * This class is used to create networks of Nodes. Each Node is associated with some data
  * and can be connected with other Nodes. Events can be registered to a Node and might
