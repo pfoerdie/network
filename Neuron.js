@@ -28,6 +28,7 @@ const _edgeEvents = {
 const _neuronEvents = {
     [$reset]: function () {
         this.data.value = 0;
+        this.data.nextValue = 0;
         this.emit($reset);
     },
     [$activate]: function (weightedValue) {
@@ -35,6 +36,7 @@ const _neuronEvents = {
     },
     [$iterate]: function () {
         let activation = Math.tanh(this.data.value - this.data.bias);
+        // console.log(activation);
         this.emit($activate, activation);
         this.emit($iterate);
     },
@@ -52,7 +54,7 @@ class Edge extends Node {
 
     constructor(weight = 0) {
         super({ weight });
-        for (let key of Object.keys(_edgeEvents)) {
+        for (let key of Reflect.ownKeys(_edgeEvents)) {
             this.on(key, _edgeEvents[key]);
         }
     } // Edge#constructor
@@ -61,9 +63,9 @@ class Edge extends Node {
 
 class Neuron extends Node {
 
-    constructor(bias = 0) {
+    constructor(bias = 1) {
         super({ bias, value: 0, nextValue: 0 });
-        for (let key of Object.keys(_neuronEvents)) {
+        for (let key of Reflect.ownKeys(_neuronEvents)) {
             this.on(key, _neuronEvents[key]);
         }
     } // Neuron#constructor
@@ -73,8 +75,10 @@ class Neuron extends Node {
     } // Neuron#value<getter>
 
     set value(value) {
-        if (typeof value === 'number')
+        if (typeof value === 'number') {
             this.data.value = value;
+            this.data.nextValue = value;
+        }
     } // Neuron#value<setter>
 
     attach(node, weight) {
@@ -88,18 +92,15 @@ class Neuron extends Node {
         return this;
     } // Neuron#attach
 
-    cycle() {
+    cycle(time = 100) {
         return new Promise((resolve, reject) => {
-            this.trigger($activate);
+            this.trigger($iterate);
             setTimeout(() => {
-                this.trigger($iterate);
+                this.trigger($update);
                 setTimeout(() => {
-                    this.trigger($update);
-                    setTimeout(() => {
-                        resolve();
-                    }, 100);
-                }, 100);
-            }, 100);
+                    resolve();
+                }, time / 2);
+            }, time / 2);
         });
     } // Neuron#cycle
 
