@@ -5,6 +5,8 @@ async function main() {
 
     // NOTE not as expected but very interesting
     // TODO need to find a good mechanism for delegating the changes to the network
+    // IDEA maybe by building layer instead of individual neurons
+    // IDEA maybe a network class that manages the neurons
 
     let n0 = new Neuron(1);
     let n1 = new Neuron(1);

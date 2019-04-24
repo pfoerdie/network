@@ -1,0 +1,1 @@
+// IDEA class that uses Nodes and gives control over a whole network
