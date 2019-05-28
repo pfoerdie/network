@@ -270,7 +270,7 @@ class Node {
      */
     static isNode(instance) {
         return _isNode(instance);
-    } // _isNode
+    } // Node#isNode
 
 } // Node
 
