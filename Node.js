@@ -155,6 +155,16 @@ class Node {
     } // Node#deleted
 
     /**
+     * IDEA two new functions
+     *      - attachOn
+     *      - attachOnce
+     * The idea is to add a callback instantly after the attachment and get the symbol back for this connection.
+     * The caller could make an emit by himself or store the symbol.
+     * attachOn could do this also on already established connections.
+     * The attachOnce function would maybe also remove the connection, after one emit. Then this must not update an existing connection! (be careful with this one)
+     */
+
+    /**
      * Adds an event listener to the current Node.
      * @param {(string|symbol)} event The name of the event.
      * @param {function} callback The event callback.
