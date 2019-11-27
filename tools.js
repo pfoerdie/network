@@ -1,6 +1,7 @@
 const
     UUID = require("uuid/v4"),
-    _module = require("./index.js");
+    Colors = require("colors"),
+    _package = require("./index.js");
 
 exports.uuid = UUID;
 
@@ -20,6 +21,9 @@ exports.is = {
     string(value) {
         return typeof value === 'string';
     },
+    String(value) {
+        return value && typeof value === 'string';
+    },
     function(value) {
         return typeof value === 'function';
     },
@@ -36,40 +40,57 @@ exports.is = {
 
 exports.assert = ((assert, is) => Object.assign(assert, {
     // primitive
-    number(value, errMsg) {
-        assert(is.number(value), errMsg || "Not a number.", TypeError);
+    number(value, checkFn) {
+        assert(is.number(value), "Not a number.", TypeError);
+        if (is.function(checkFn))
+            assert(checkFn(value), "Invalid number.", TypeError);
     },
-    string(value, errMsg) {
-        assert(is.string(value), errMsg || "Not a string.", TypeError);
+    string(value, checkFn) {
+        assert(is.string(value), "Not a string.", TypeError);
+        if (is.function(checkFn))
+            assert(checkFn(value), "Invalid string.", TypeError);
+    },
+    String(value, checkFn) {
+        assert(is.string(value), "Not a String.", TypeError);
+        if (is.function(checkFn))
+            assert(checkFn(value), "Invalid String.", TypeError);
     },
     // native
-    function(value, errMsg) {
-        assert(is.function(value), errMsg || "Not a function.", TypeError);
+    function(value) {
+        assert(is.function(value), "Not a function.", TypeError);
     },
-    array(value, errMsg) {
-        assert(is.array(value), errMsg || "Not an array.", TypeError);
+    array(value, checkFn) {
+        assert(is.array(value), "Not an array.", TypeError);
+        if (is.function(checkFn))
+            assert(value.every(checkFn), "Invalid entries in the array.", TypeError);
     },
-    object(value, errMsg) {
-        assert(is.object(value), errMsg || "Not an object.", TypeError);
+    object(value) {
+        assert(is.object(value), "Not an object.", TypeError);
     },
-    Object(value, errMsg) {
-        assert(is.Object(value), errMsg || "Not an Object.", TypeError);
+    Object(value, checkFn) {
+        assert(is.Object(value), "Not an Object.", TypeError);
+        if (is.function(checkFn))
+            assert(Object.entries().every(checkFn), "Invalid entries in the Object.", TypeError);
     },
     // core
-    Node(value, errMsg) {
-        assert(value instanceof _module.Node, errMsg || "Not a Node.", TypeError);
+    Node(value) {
+        assert(value instanceof _package.Node, "Not a Node.", TypeError);
     },
-    Edge(value, errMsg) {
-        assert(value instanceof _module.Edge, errMsg || "Not an Edge.", TypeError);
+    Edge(value) {
+        assert(value instanceof _package.Edge, "Not an Edge.", TypeError);
     },
-    Message(value, errMsg) {
-        assert(value instanceof _module.Message, errMsg || "Not a Message.", TypeError);
+    Message(value) {
+        assert(value instanceof _package.Message, "Not a Message.", TypeError);
     },
-    Model(value, errMsg) {
-        assert(value instanceof _module.Model, errMsg || "Not a Model.", TypeError);
+    Model(value) {
+        assert(value instanceof _package.Model, "Not a Model.", TypeError);
     },
-    Network(value, errMsg) {
-        assert(value instanceof _module.Network, errMsg || "Not a Network.", TypeError);
+    Network(value) {
+        assert(value instanceof _package.Network, "Not a Network.", TypeError);
+    },
+    // ext
+    Entity(value) {
+        assert(value instanceof _package.Entity, "Not an Entity.", TypeError);
     }
 }))(function assert(value, errMsg, errType = Error) {
     if (!value) {
@@ -84,4 +105,33 @@ exports.assert = ((assert, is) => Object.assign(assert, {
 
 exports.promify = function promify(fn, ...args) {
     return new Promise((resolve, reject) => fn(...args, (err, result) => err ? reject(err) : resolve(result)));
+};
+
+exports.log = function log(scope, method, ...args) {
+    let raw = "", colored = "", { is } = exports, silent = false;
+
+    if (is.String(scope)) {
+        raw = scope;
+        colored = Colors.yellow(scope);
+    } else if (is.Object(scope) && is.String(method) && Reflect.has(scope, method)) {
+        let scopeName = scope.__proto__.constructor.name, scopeData = exports.is.String(scope.uid) ? scope.uid : JSON.stringify(scope.data) || "";
+        let argPairs = args.map(arg => [arg.__proto__.constructor.name, !args ? "" : exports.is.String(arg.uid) ? arg.uid : JSON.stringify(arg.data) || ""]);
+
+        raw = `${scopeName}<${scopeData}>.${method}(${argPairs.map(([argName, argData]) => `${argName}<${argData}>`).join(", ")})`;
+        colored = Colors.cyan(scopeName) + Colors.grey("<") + Colors.green(scopeData) + Colors.grey(">")
+            + Colors.grey(".") + Colors.magenta(method) + Colors.grey("(")
+            + argPairs.map(([argName, argData]) =>
+                Colors.blue(argName) + (argData ? Colors.grey("<") + Colors.green(argData) + Colors.grey(">") : "")
+            ).join(Colors.grey(", "))
+            + Colors.grey(")");
+    } else {
+        return null;
+    }
+
+    if (!silent) {
+        // console.log("log: " + raw);
+        console.log(Colors.grey("log: ") + colored);
+    }
+
+    return raw;
 };

@@ -4,20 +4,21 @@
  */
 
 const
-    _module = require("./index.js"),
-    _ = _module.tools,
+    _ = require("../tools"),
+    _core = require("../core.js"),
     _private = new WeakMap(),
-    _package = _module.package;
+    _protected = _core.protected;
 
 class Node {
 
     /**
-     * @param {object} [data=null] 
+     * @param {*} [data=null] 
      * @constructs Node 
      */
     constructor(data = null) {
         _private.set(this, { data });
-        _package.set(this, { edges: new Set() });
+        _protected.set(this, { target: new.target, edges: new Set() });
+        _.log(this, "constructor", data);
     }
 
     /**
@@ -30,7 +31,7 @@ class Node {
 
     get [Symbol.iterator]() {
         _.assert.Node(this);
-        return null;
+        return _protected.get(this).edges.values();
     }
 
     get [Symbol.asyncIterator]() {
@@ -39,22 +40,35 @@ class Node {
     }
 
     /**
+     * @param {Message} msg 
+     */
+    emit(msg) {
+        _.assert.Node(this);
+        _.assert.Message(msg);
+        _.log(this, "emit", msg);
+        _protected.get(this).edges.forEach(edge => setImmediate(edge.trigger.bind(edge), msg));
+    }
+
+    /**
+     * @param {object} data
      * @returns {boolean} 
      */
-    remove() {
+    update(data) {
         _.assert.Node(this);
-        _private.delete(this);
-        _package.delete(this);
+        _private.get(this).data = data;
+        _.log(this, "update", data);
         return true;
     }
 
     /**
      * @returns {boolean} 
      */
-    refresh() {
+    delete() {
         _.assert.Node(this);
-        // TODO
-        return false;
+        _.log(this, "delete");
+        _private.delete(this);
+        _protected.delete(this);
+        return true;
     }
 
     static [Symbol.hasInstance](instance) {

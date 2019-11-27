@@ -1,2 +1,2 @@
-Object.assign(exports, require("./core/index.js"));
-// Object.assign(exports, require("./ext/index.js"));
+Object.assign(exports, require("./core.js"));
+Object.assign(exports, require("./ext.js"));

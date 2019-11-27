@@ -4,20 +4,21 @@
  */
 
 const
-    _module = require("./index.js"),
-    _ = _module.tools,
+    _ = require("../tools"),
+    _core = require("../core.js"),
     _private = new WeakMap(),
-    _package = _module.package;
+    _protected = _core.protected;
 
 class Message {
 
     /**
-     * @param {object} [data=null] 
+     * @param {*} [data=null] 
      * @constructs Message 
      */
     constructor(data = null) {
         _private.set(this, { data, cache: new WeakMap() });
-        _package.set(this, {});
+        _protected.set(this, { target: new.target });
+        _.log(this, "constructor", data);
     }
 
     /**
@@ -28,13 +29,31 @@ class Message {
         return _private.get(this).data;
     }
 
+    process(edge) {
+        _.assert.Message(this);
+        _.assert.Edge(edge);
+        _.log(this, "process", edge);
+        edge.to.emit(this);
+    }
+
     /**
      * @returns {boolean} 
      */
-    remove() {
+    update() {
         _.assert.Message(this);
+        // TODO
+        _.log(this, "update", data);
+        return false;
+    }
+
+    /**
+     * @returns {boolean} 
+     */
+    delete() {
+        _.assert.Message(this);
+        _.log(this, "delete");
         _private.delete(this);
-        _package.delete(this);
+        _protected.delete(this);
         return true;
     }
 

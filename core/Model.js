@@ -4,10 +4,10 @@
  */
 
 const
-    _module = require("./index.js"),
-    _ = _module.tools,
+    _ = require("../tools"),
+    _core = require("../core.js"),
     _private = new WeakMap(),
-    _package = _module.package;
+    _protected = _core.protected;
 
 class Model {
 
@@ -16,7 +16,7 @@ class Model {
      */
     constructor() {
         _private.set(this, {});
-        _package.set(this, {});
+        _protected.set(this, { target: new.target });
     }
 
     get [Symbol.iterator]() {
@@ -32,19 +32,10 @@ class Model {
     /**
      * @returns {boolean} 
      */
-    remove() {
-        _.assert.Model(this);
-        _private.delete(this);
-        _package.delete(this);
-        return true;
-    }
-
-    /**
-     * @returns {boolean} 
-     */
-    refresh() {
+    update(...args) {
         _.assert.Model(this);
         // TODO
+        _.log(this, "update", ...args);
         return false;
     }
 

@@ -4,10 +4,10 @@
  */
 
 const
-    _module = require("./index.js"),
-    _ = _module.tools,
+    _ = require("../tools"),
+    _core = require("../core.js"),
     _private = new WeakMap(),
-    _package = _module.package;
+    _protected = _core.protected;
 
 class Network {
 
@@ -16,7 +16,7 @@ class Network {
      */
     constructor() {
         _private.set(this, {});
-        _package.set(this, {});
+        _protected.set(this, { target: new.target });
     }
 
     get [Symbol.iterator]() {
@@ -32,20 +32,22 @@ class Network {
     /**
      * @returns {boolean} 
      */
-    remove() {
+    update(...args) {
         _.assert.Network(this);
-        _private.delete(this);
-        _package.delete(this);
-        return true;
+        // TODO
+        _.log(this, "update", ...args);
+        return false;
     }
 
     /**
      * @returns {boolean} 
      */
-    refresh() {
+    delete() {
         _.assert.Network(this);
-        // TODO
-        return false;
+        _.log(this, "delete");
+        _private.delete(this);
+        _protected.delete(this);
+        return true;
     }
 
     static [Symbol.hasInstance](instance) {
