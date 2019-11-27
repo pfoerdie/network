@@ -1,0 +1,8 @@
+/**
+ * @module Model.ODRL
+ * @author Pfoerdie
+ */
+
+const
+    _module = require("./index.js"),
+    _ = _module.tools;

@@ -1,2 +1,2 @@
-exports.Node = require('./Node.js');
-exports.Neuron = require('./Neuron.js');
+Object.assign(exports, require("./core/index.js"));
+// Object.assign(exports, require("./ext/index.js"));
