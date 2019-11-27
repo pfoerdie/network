@@ -41,14 +41,15 @@ class Node {
 
     /**
      * @param {Message} msg 
+     * @param {...*} args
+     * @returns {undefined}
      */
-    emit(msg) {
+    emit(msg, ...args) {
         _.assert.Node(this);
         _.assert.Message(msg);
         _.log(this, "emit", msg);
         // _protected.get(this).edges.forEach(edge => setImmediate(edge.trigger.bind(edge), msg));
-        let delay = 1e3;
-        _protected.get(this).edges.forEach(edge => setTimeout(edge.trigger.bind(edge), delay, msg));
+        _protected.get(this).edges.forEach(edge => edge.trigger(msg, ...args));
     }
 
     /**

@@ -16,7 +16,7 @@ class Message {
      * @constructs Message 
      */
     constructor(data = null) {
-        _private.set(this, { data, cache: new WeakMap() });
+        _private.set(this, { data, cache: new WeakMap(), delay: 1e3 });
         _protected.set(this, { target: new.target });
         _.log(this, "constructor", data);
     }
@@ -29,11 +29,28 @@ class Message {
         return _private.get(this).data;
     }
 
-    process(edge) {
+    /**
+     * @param {Node} node 
+     * @param {...*} args
+     * @returns {undefined}
+     */
+    process(node, ...args) {
+        _.assert.Message(this);
+        _.assert.Node(node);
+        _.log(this, "process", node);
+        node.emit(this, ...args);
+    }
+
+    /**
+     * @param {Edge} edge 
+     * @param {...*} args
+     * @returns {undefined}
+     */
+    transfer(edge, ...args) {
         _.assert.Message(this);
         _.assert.Edge(edge);
-        _.log(this, "process", edge);
-        edge.to.emit(this);
+        _.log(this, "transfer", edge);
+        setTimeout(this.process.bind(this), _private.get(this).delay, edge.to, ...args);
     }
 
     /**

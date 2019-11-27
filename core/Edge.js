@@ -50,11 +50,16 @@ class Edge {
         return _private.get(this).data;
     }
 
-    trigger(msg) {
+    /**
+     * @param {Message} msg 
+     * @param {...*} args
+     * @returns {undefined}
+     */
+    trigger(msg, ...args) {
         _.assert.Edge(this);
         _.assert.Message(msg);
         _.log(this, "trigger", msg);
-        msg.process(this);
+        setImmediate(msg.transfer.bind(msg), this, ...args);
     }
 
     /**
