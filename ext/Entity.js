@@ -33,6 +33,12 @@ class Entity extends _core.Node {
         _observer.emit("create", this);
     }
 
+    emit(...args) {
+        _.assert.Entity(this);
+        if (_.is.string(this.data.msg)) _.log(this.data.msg);
+        super.emit(...args);
+    }
+
     /**
      * @param {object} data
      * @param {Array<[String|Entity, Object]>} [rels=[]]
