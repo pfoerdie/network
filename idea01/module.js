@@ -2,6 +2,7 @@ const _ = require("./tools.js");
 
 // private
 _.define(exports, "private", new WeakMap());
+_.define(exports, "package", new WeakMap());
 _.define(exports, "instances", new Map());
 _.define(exports, "secret", Symbol());
 
@@ -13,6 +14,8 @@ _.enumerate(exports, "Message", require("./Message.js"));
 // extensions
 _.enumerate(exports, "Neuron", require("./Neuron.js"));
 _.enumerate(exports, "Signal", require("./Signal.js"));
+
+_.enumerate(exports, "Entity", require("./Entity.js"));
 
 // extras
 _.enumerate(exports, "toJSON", function () {
