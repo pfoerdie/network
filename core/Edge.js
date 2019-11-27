@@ -12,12 +12,12 @@ const
 class Edge {
 
     /**
+     * @param {object} [data=null] 
      * @param {Node} from 
      * @param {Node} to 
-     * @param {object} [data=null] 
      * @constructs Edge 
      */
-    constructor(from, to, data = null) {
+    constructor(data = null, from, to) {
         _.assert.Node(from);
         _.assert.Node(to);
         _private.set(this, { from, to, data });
