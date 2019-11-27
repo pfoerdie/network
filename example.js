@@ -6,4 +6,5 @@ let n3 = new Node("n3");
 let e1 = new Edge(n1, n2, "e1");
 let e2 = new Edge(n2, n3, ["e2"]);
 let m1 = new Message("m1");
+
 n1.emit(m1);

@@ -29,16 +29,6 @@ class Model {
         return null;
     }
 
-    /**
-     * @returns {boolean} 
-     */
-    update(...args) {
-        _.assert.Model(this);
-        // TODO
-        _.log(this, "update", ...args);
-        return false;
-    }
-
     static [Symbol.hasInstance](instance) {
         return _private.has(instance);
     }

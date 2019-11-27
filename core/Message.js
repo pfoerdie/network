@@ -60,9 +60,10 @@ class Message {
     /**
      * @returns {*} 
      */
-    cache() {
+    cache(...args) {
         _.assert.Message(this);
         // TODO
+        _.log(this, "cache", ...args);
     }
 
     static [Symbol.hasInstance](instance) {
