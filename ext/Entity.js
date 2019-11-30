@@ -13,14 +13,14 @@ const
 class Entity extends _core.Node {
 
     /**
-     * @param {{uid: String, type: Array<String>}} [data={uid=UUID(),type=[]}]
+     * @param {{id: String, type: Array<String>}} [data={id=UUID(),type=[]}]
      * @param {Array<[String|Entity, Object]>} [rels=[]]
      * @constructs Entity 
      * @extends Node
      */
-    constructor(data = { uid: _.uuid(), type: [] }, rels = []) {
+    constructor(data = { id: _.uuid(), type: [] }, rels = []) {
         _.assert.Object(data);
-        _.assert.String(data.uid);
+        _.assert.String(data.id);
         _.assert.array(data.type, _.is.String);
         _.assert.array(rels, ([target, data]) => _.is.String(target) || target instanceof Entity);
         super(data);
@@ -47,7 +47,7 @@ class Entity extends _core.Node {
     update(data, rels = []) {
         _.assert.Entity(this);
         _.assert.Object(data);
-        _.assert(data.uid === this.data.uid, "The uid does not match.");
+        _.assert(data.id === this.data.id, "The id does not match.");
         _.assert.array(data.type, _.is.String);
         // TODO merge rels
         let res = super.update(data);
@@ -60,9 +60,9 @@ class Entity extends _core.Node {
      */
     delete() {
         _.assert.Entity(this);
-        let uid = this.data.uid;
+        let id = this.data.id;
         let res = super.delete();
-        if (res) _observer.emit("delete", uid);
+        if (res) _observer.emit("delete", id);
         return res;
     }
 

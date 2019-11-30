@@ -32,7 +32,7 @@ class Model {
         return _private.get(this).classes.keys();
     }
 
-    define(Class, identifier = "type") {
+    define(Class) {
         _.assert.Model(this);
         _.assert.function(Class);
         _.assert(Class === _core.Node || _core.Node.isPrototypeOf(Class), "Class has to inherit from Node.");
@@ -40,11 +40,12 @@ class Model {
         _private.get(this).classes.add(Class);
     }
 
-    construct(data) {
+    construct(type, data) {
         _.assert.Model(this);
         _.assert.Object(data);
+        let types = _.is.array(type) ? type : [type];
         let [Class, ...tmp] = Array.from(_private.get(this).classes.values())
-            .filter(tmpClass => _.is.array(data.type) ? data.type.some(type => type === tmpClass.name) : data.type === tmpClass.name);
+            .filter(tmpClass => types.some(type => type === tmpClass.name));
         _.assert(Class, "No constructor has been found.");
         _.assert(tmp.length === 0, "No unique constructor has been found.");
         return new Class(data);

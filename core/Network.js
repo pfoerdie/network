@@ -31,13 +31,13 @@ class Network {
         let { nodes } = _private.get(this);
         if (node instanceof _core.Node) {
             _.assert.Object(node.data);
-            _.assert.String(node.data.uid, val => !nodes.has(val));
+            _.assert.String(node.data.id, val => !nodes.has(val));
         } else {
             _.assert.Object(node);
-            _.assert.String(node.uid, val => !nodes.has(val));
+            _.assert.String(node.id, val => !nodes.has(val));
             node = _private.get(this).model.construct(node);
         }
-        nodes.set(node.uid, node);
+        nodes.set(node.id, node);
         return node || null;
     }
 
@@ -46,7 +46,7 @@ class Network {
         let { nodes } = _private.get(this);
         if (_.is.String(node)) node = nodes.get(node);
         _.assert.Node(node);
-        let res = nodes.delete(node.uid);
+        let res = nodes.delete(node.id);
         return res ? node : null;
     }
 
