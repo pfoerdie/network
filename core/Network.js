@@ -35,7 +35,7 @@ class Network {
         } else {
             _.assert.Object(node);
             _.assert.String(node.id, val => !nodes.has(val));
-            node = _private.get(this).model.construct(node);
+            node = _private.get(this).model.construct(node.type, node);
         }
         nodes.set(node.id, node);
         return node || null;
