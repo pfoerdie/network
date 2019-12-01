@@ -75,13 +75,13 @@ class Edge {
     /**
      * @returns {boolean} 
      */
-    delete() {
+    remove() {
         _.assert.Edge(this);
-        _.log(this, "delete");
+        _.log(this, "remove");
         let { from } = _private.get(this);
-        _private.delete(this);
-        _protected.delete(this);
-        _protected.get(from).edges.delete(this);
+        _private.remove(this);
+        _protected.remove(this);
+        _protected.get(from).edges.remove(this);
         return true;
     }
 

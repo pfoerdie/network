@@ -66,11 +66,11 @@ class Message {
     /**
      * @returns {boolean} 
      */
-    delete() {
+    remove() {
         _.assert.Message(this);
-        _.log(this, "delete");
-        _private.delete(this);
-        _protected.delete(this);
+        _.log(this, "remove");
+        _private.remove(this);
+        _protected.remove(this);
         return true;
     }
 

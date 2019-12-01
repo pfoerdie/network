@@ -35,7 +35,7 @@ class Entity extends _core.Node {
 
     emit(...args) {
         _.assert.Entity(this);
-        if (_.is.string(this.data.msg)) _.log(this.data.msg);
+        if (_.is.string(this.data.msg)) _.log(this.data.msg); // TODO temp
         super.emit(...args);
     }
 
@@ -58,12 +58,16 @@ class Entity extends _core.Node {
     /**
      * @returns {boolean} 
      */
-    delete() {
+    remove() {
         _.assert.Entity(this);
         let id = this.data.id;
-        let res = super.delete();
-        if (res) _observer.emit("delete", id);
+        let res = super.remove();
+        if (res) _observer.emit("remove", id);
         return res;
+    }
+
+    static [Symbol.hasInstance](instance) {
+        return _private.has(instance);
     }
 
 }
