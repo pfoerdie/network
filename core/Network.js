@@ -39,8 +39,9 @@ class Network {
         _.assert.Network(this);
         _.assert.Node(node);
         _.assert.Object(node.data);
-        let { nodes } = _private.get(this);
+        let { nodes, model } = _private.get(this);
         _.assert.String(node.data.id, val => !nodes.has(val));
+        _.assert(model.supports(node), "That Node is not supported.");
         nodes.set(node.id, node);
         return node;
     }

@@ -58,6 +58,13 @@ class Model {
         return new Class(data);
     }
 
+    supports(node) {
+        _.assert.Model(this);
+        _.assert.Node(node);
+        let { target } = _protected.get(node);
+        return Array.from(_private.get(this).classes.values()).some(Class => target === Class);
+    }
+
     static [Symbol.hasInstance](instance) {
         return _private.has(instance);
     }

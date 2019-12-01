@@ -14,6 +14,7 @@ model.define(Entity);
 model.define(Node);
 let net = new Network(model);
 let n4 = net.createNode({ id: "n4", type: ["Entity"], msg: "n4 reached" });
+net.addNode(n2);
 // let n4 = model.construct( { id: "n4", type: ["File", "Asset"] });
 new Edge("e3", n2, n4);
 new Edge("e4", n4, n3);
