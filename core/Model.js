@@ -17,7 +17,7 @@ class Model {
      */
     constructor(name) {
         _.assert.String(name);
-        _private.set(this, { name, classes: new Set() });
+        _private.set(this, { name, classes: new Set(), locked: false });
         _protected.set(this, {});
         _.log(this, "constructor", name);
     }
@@ -32,18 +32,25 @@ class Model {
         return _private.get(this).classes.keys();
     }
 
+    lock() {
+        _.assert.Model(this);
+        _private.get(this).locked = true;
+    }
+
     define(Class) {
         _.assert.Model(this);
+        _.assert(!_private.get(this).locked, "This Model is locked.");
         _.assert.function(Class);
         _.assert(Class === _core.Node || _core.Node.isPrototypeOf(Class), "Class has to inherit from Node.");
         _.assert(!_private.get(this).classes.has(Class), "Class is already defined.");
         _private.get(this).classes.add(Class);
     }
 
-    construct(type, data) {
+    construct(data) {
         _.assert.Model(this);
         _.assert.Object(data);
-        let types = _.is.array(type) ? type : [type];
+        let types = _.is.array(data.type) ? data.type : [data.type];
+        _.assert.array(types, _.is.String);
         let [Class, ...tmp] = Array.from(_private.get(this).classes.values())
             .filter(tmpClass => types.some(type => type === tmpClass.name));
         _.assert(Class, "No constructor has been found.");

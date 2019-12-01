@@ -14,10 +14,10 @@ model.define(Entity);
 model.define(Node);
 let net = new Network(model);
 let n4 = net.createNode({ id: "n4", type: ["Entity"], msg: "n4 reached" });
-// let n4 = model.construct(["Entity"], { id: "n4", type: ["File", "Asset"] });
+// let n4 = model.construct( { id: "n4", type: ["File", "Asset"] });
 new Edge("e3", n2, n4);
 new Edge("e4", n4, n3);
-let e5 = new Edge({ type: "Relation", label: "e5" }, n3, model.construct("Node", { lorem: "ipsum" }));
+let e5 = new Edge({ type: "Relation", label: "e5" }, n3, model.construct({ lorem: "ipsum", type: "Node" }));
 // new Edge("e6", n4, e5.to);
 new Edge("e6", e5.to, n4);
 

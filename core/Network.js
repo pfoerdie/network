@@ -26,23 +26,35 @@ class Network {
         return _private.get(this).nodes.values();
     }
 
-    createNode(node) {
-        _.assert.Object(node);
+    createNode(data) {
+        _.assert.Object(data);
         let { nodes } = _private.get(this);
-        _.assert.String(node.id, val => !nodes.has(val));
-        node = _private.get(this).model.construct(node.type, node);
+        _.assert.String(data.id, val => !nodes.has(val));
+        let node = _private.get(this).model.construct(data);
         nodes.set(node.id, node);
-        return node || null;
+        return node;
     }
 
     addNode(node) {
         _.assert.Network(this);
-        let { nodes } = _private.get(this);
         _.assert.Node(node);
         _.assert.Object(node.data);
+        let { nodes } = _private.get(this);
         _.assert.String(node.data.id, val => !nodes.has(val));
         nodes.set(node.id, node);
-        return node || null;
+        return node;
+    }
+
+    hasNode(id) {
+        _.assert.Network(this);
+        _.assert.String(id);
+        return _private.get(this).nodes.has(id);
+    }
+
+    getNode(id) {
+        _.assert.Network(this);
+        _.assert.String(id);
+        return _private.get(this).nodes.get(id) || null;
     }
 
     removeNode(node) {

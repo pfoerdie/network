@@ -24,11 +24,8 @@ class Entity extends _core.Node {
         _.assert.array(data.type, _.is.String);
         _.assert.array(rels, ([target, data]) => _.is.String(target) || target instanceof Entity);
         super(data);
-        rels.forEach(([target, data]) => {
-            if (target instanceof Entity) {
-                new Relation(this, target, data);
-            }
-        });
+        rels = rels.map((pair = [target, data]) =>
+            target instanceof Entity ? new Relation(this, target, data) : pair);
         _private.set(this, { rels });
         _observer.emit("create", this);
     }
@@ -73,6 +70,12 @@ class Entity extends _core.Node {
 }
 
 class Relation extends _core.Edge {
+
+    constructor(from, to, data = { type: [] }) {
+        _.assert.Object(data);
+        _.assert.array(data.type, _.is.String);
+        super(from, to, data);
+    }
 
 }
 
