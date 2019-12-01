@@ -41,14 +41,14 @@ class Network {
         return node || null;
     }
 
-    remove(node) {
-        _.assert.Network(this);
-        let { nodes } = _private.get(this);
-        if (_.is.String(node)) node = nodes.get(node);
-        _.assert.Node(node);
-        let res = nodes.delete(node.id);
-        return res ? node : null;
-    }
+    // remove(node) {
+    //     _.assert.Network(this);
+    //     let { nodes } = _private.get(this);
+    //     if (_.is.String(node)) node = nodes.get(node);
+    //     _.assert.Node(node);
+    //     let res = nodes.delete(node.id);
+    //     return res ? node : null;
+    // }
 
     /**
      * @returns {boolean} 

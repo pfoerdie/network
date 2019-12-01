@@ -39,7 +39,7 @@ class Entity extends _core.Node {
         super.emit(...args);
     }
 
-    /**
+    /** 
      * @param {object} data
      * @param {Array<[String|Entity, Object]>} [rels=[]]
      * @returns {boolean} 
