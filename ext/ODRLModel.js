@@ -6,6 +6,36 @@
 const
     _ = require("../tools"),
     _core = require("../core.js"),
-    _private = new WeakMap();
+    _ext = require("../ext.js"),
+    _private = new WeakMap(),
+    model = new _core.Model("ODRL");
 
-module.exports = null;
+model.define(class Asset extends _ext.Entity {
+
+});
+
+model.define(class AssetCollection extends _ext.Entity {
+
+});
+
+model.define(class Party extends _ext.Entity {
+
+});
+
+model.define(class PartyCollection extends _ext.Entity {
+
+});
+
+model.define(class Policy extends _ext.Entity {
+
+});
+
+model.define(class Rule extends _ext.Entity {
+
+});
+
+model.define(class Constraint extends _ext.Entity {
+
+});
+
+module.exports = model.lock();

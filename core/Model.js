@@ -35,6 +35,7 @@ class Model {
     lock() {
         _.assert.Model(this);
         _private.get(this).locked = true;
+        return this;
     }
 
     define(Class) {
@@ -44,6 +45,7 @@ class Model {
         _.assert(Class === _core.Node || _core.Node.isPrototypeOf(Class), "Class has to inherit from Node.");
         _.assert(!_private.get(this).classes.has(Class), "Class is already defined.");
         _private.get(this).classes.add(Class);
+        return this;
     }
 
     construct(data) {
