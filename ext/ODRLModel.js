@@ -8,7 +8,7 @@ const
     _core = require("../core.js"),
     _ext = require("../ext.js"),
     _private = new WeakMap(),
-    model = new _core.Model("ODRL");
+    model = new _core.Model("ODRL22");
 
 model.define(class Asset extends _ext.Entity {
 
