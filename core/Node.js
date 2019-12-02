@@ -29,7 +29,7 @@ class Node {
         return _private.get(this).data;
     }
 
-    get [Symbol.iterator]() {
+    [Symbol.iterator]() {
         _.assert.Node(this);
         return _protected.get(this).edges.values();
     }

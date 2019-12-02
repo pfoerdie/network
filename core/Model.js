@@ -27,7 +27,7 @@ class Model {
         return _private.get(this).name;
     }
 
-    get [Symbol.iterator]() {
+    [Symbol.iterator]() {
         _.assert.Model(this);
         return _private.get(this).classes.keys();
     }

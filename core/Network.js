@@ -21,7 +21,7 @@ class Network {
         _protected.set(this, { target: new.target });
     }
 
-    get [Symbol.iterator]() {
+    [Symbol.iterator]() {
         _.assert.Network(this);
         return _private.get(this).nodes.values();
     }
