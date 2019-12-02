@@ -51,13 +51,15 @@ class Model {
     construct(data) {
         _.assert.Model(this);
         _.assert.Object(data);
+        _.log(this, "construct", data);
         let types = _.is.array(data.type) ? data.type : [data.type];
         _.assert.array(types, _.is.String);
         let [Class, ...tmp] = Array.from(_private.get(this).classes.values())
             .filter(tmpClass => types.some(type => type === tmpClass.name));
         _.assert(Class, "No constructor has been found.");
         _.assert(tmp.length === 0, "No unique constructor has been found.");
-        return new Class(data);
+        let res = new Class(data);
+        return res;
     }
 
     supports(node) {

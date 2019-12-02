@@ -16,9 +16,9 @@ class Network {
      */
     constructor(model) {
         _.assert.Model(model);
+        _.log(this, "constructor", model);
         _private.set(this, { model, nodes: new Map() });
         _protected.set(this, { target: new.target });
-        _.log(this, "constructor", model);
     }
 
     get [Symbol.iterator]() {
@@ -28,6 +28,7 @@ class Network {
 
     createNode(data) {
         _.assert.Object(data);
+        _.log(this, "createNode", data);
         let { nodes } = _private.get(this);
         _.assert.String(data.id, val => !nodes.has(val));
         let node = _private.get(this).model.construct(data);
@@ -39,6 +40,7 @@ class Network {
         _.assert.Network(this);
         _.assert.Node(node);
         _.assert.Object(node.data);
+        _.log(this, "addNode", node);
         let { nodes, model } = _private.get(this);
         _.assert.String(node.data.id, val => !nodes.has(val));
         _.assert(model.supports(node), "That Node is not supported.");
@@ -60,6 +62,7 @@ class Network {
 
     removeNode(node) {
         _.assert.Network(this);
+        _.log(this, "removeNode", node);
         let { nodes } = _private.get(this);
         if (_.is.String(node)) node = nodes.get(node);
         _.assert.Node(node);
@@ -72,8 +75,8 @@ class Network {
      */
     update(...args) {
         _.assert.Network(this);
-        // TODO
         _.log(this, "update", ...args);
+        // TODO
         return false;
     }
 

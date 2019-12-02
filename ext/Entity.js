@@ -30,6 +30,10 @@ class Entity extends _core.Node {
         _observer.emit("create", this);
     }
 
+    get id() {
+        return this.data.id;
+    }
+
     emit(...args) {
         _.assert.Entity(this);
         if (_.is.string(this.data.msg)) _.log(this.data.msg); // TODO temp

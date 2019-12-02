@@ -115,8 +115,8 @@ exports.log = function log(scope, method, ...args) {
         raw = scope;
         color = Colors.yellow(scope);
     } else if (is.Object(scope) && is.String(method) && Reflect.has(scope, method)) {
-        let scopeName = scope.__proto__.constructor.name, scopeData = is.String(scope.uid) ? scope.uid : is.String(scope.id) ? scope.id : JSON.stringify(scope.data) || "";
-        let argPairs = args.map(arg => [arg === undefined ? "undefined" : arg === null ? "null" : arg.__proto__.constructor.name, !arg ? "" : is.String(arg.uid) ? arg.uid : is.String(arg.id) ? arg.id : JSON.stringify(arg.data) || ""]);
+        let scopeName = scope.__proto__.constructor.name, scopeData = is.String(scope.id) ? scope.id : JSON.stringify(scope.data) || "";
+        let argPairs = args.map(arg => [arg === undefined ? "undefined" : arg === null ? "null" : arg.__proto__.constructor.name, !arg ? "" : is.String(arg.id) ? arg.id : JSON.stringify(arg.data) || ""]);
 
         raw = `${scopeName}<${scopeData}>.${method}(${argPairs.map(([argName, argData]) => `${argName}<${argData}>`).join(", ")})`;
         color = Colors.cyan(scopeName) + Colors.grey("<") + Colors.green(scopeData) + Colors.grey(">")

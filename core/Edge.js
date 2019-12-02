@@ -23,7 +23,7 @@ class Edge {
         _private.set(this, { from, to, data });
         _protected.set(this, { target: new.target });
         _protected.get(from).edges.add(this);
-        _.log(this, "constructor", data);
+        _.log(this, "constructor", data, from, to);
     }
 
     /**
@@ -67,8 +67,8 @@ class Edge {
      */
     update() {
         _.assert.Edge(this);
-        // TODO
         _.log(this, "update", data);
+        // TODO
         return false;
     }
 

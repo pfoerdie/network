@@ -58,8 +58,8 @@ class Node {
      */
     update(data) {
         _.assert.Node(this);
-        _private.get(this).data = data;
         _.log(this, "update", data);
+        _private.get(this).data = data;
         return true;
     }
 

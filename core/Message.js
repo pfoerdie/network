@@ -58,8 +58,8 @@ class Message {
      */
     update() {
         _.assert.Message(this);
-        // TODO
         _.log(this, "update", data);
+        // TODO
         return false;
     }
 
@@ -79,8 +79,8 @@ class Message {
      */
     cache(...args) {
         _.assert.Message(this);
-        // TODO
         _.log(this, "cache", ...args);
+        // TODO
     }
 
     static [Symbol.hasInstance](instance) {
