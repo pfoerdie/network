@@ -73,23 +73,23 @@ exports.assert = ((assert, is) => Object.assign(assert, {
             assert(Object.entries().every(checkFn), "Invalid entries in the Object.", TypeError);
     },
     // core
-    Node(value) {
+    Node(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Node, "Not a Node.", TypeError);
     },
-    Edge(value) {
+    Edge(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Edge, "Not an Edge.", TypeError);
     },
-    Message(value) {
+    Message(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Message, "Not a Message.", TypeError);
     },
-    Model(value) {
+    Model(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Model, "Not a Model.", TypeError);
     },
-    Network(value) {
+    Network(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Network, "Not a Network.", TypeError);
     },
     // ext
-    Entity(value) {
+    Entity(value) { // TODO this is NOT GOOD, because of circular requirements! avoid using _package and remove it!
         assert(value instanceof _package.Entity, "Not an Entity.", TypeError);
     }
 }))(function assert(value, errMsg, errType = Error) {
