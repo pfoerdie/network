@@ -30,6 +30,15 @@ class Network {
         return _private.get(this).uid;
     }
 
+    /**
+     * @param {...*} args
+     * @returns {undefined}
+     * @interface
+     */
+    async process(...args) {
+        // TODO
+    }
+
     /** @type {Iterator<Node>} */ // TODO change it to an Iterator that does not expose the set itself
     get cache() {
         _.assert(_private.has(this), "this is not a Network");
@@ -121,6 +130,7 @@ class Network {
             type: "Network",
             uid: this.uid,
             cache: Array.from(this.cache).map(node => node.uid),
+            // TODO include edges
             inputs: Array.from(this.inputs).map(input => input.uid),
             outputs: Array.from(this.outputs).map(output => output.uid)
         };
