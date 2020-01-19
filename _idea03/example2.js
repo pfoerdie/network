@@ -55,7 +55,19 @@ for (let middle_node of middle_layer) {
     processNode(middle_node);
 }
 
-console.log("output: " + Array
+console.log("inputs:\t\t" + Array
+    .from(neural_net.inputs)
+    .map(input_node => activation(input_node.data.bias, input_node.data.value))
+    .join(" ")
+);
+
+console.log("middle_layer:\t" + Array
+    .from(middle_layer)
+    .map(middle_node => activation(middle_node.data.bias, middle_node.data.value))
+    .join(" ")
+);
+
+console.log("output:\t\t" + Array
     .from(neural_net.outputs)
     .map(output_node => activation(output_node.data.bias, output_node.data.value))
     .join(" ")
