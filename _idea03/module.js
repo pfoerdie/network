@@ -10,3 +10,6 @@ _.define(exports, "generateUID", function (id) {
 _.enumerate(exports, "Node", require("./Node.js"));
 _.enumerate(exports, "Edge", require("./Edge.js"));
 _.enumerate(exports, "Network", require("./Network.js"));
+
+
+_.enumerate(exports, "Neuron", require("./Neuron.js"));
