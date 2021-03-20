@@ -7,7 +7,7 @@ exports.enumerate = function (obj, key, value, get, set) {
     Object.defineProperty(obj, key, (get || set) ? { get, set, enumerable } : { value, enumerable });
 };
 
-exports.uuid = require("uuid/v4");
+exports.uuid = require("uuid").v4;
 
 exports.assert = function assert(value, errMsg, errType = Error) {
     if (!value) {

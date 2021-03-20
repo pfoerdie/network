@@ -1,4 +1,4 @@
-const _ = require("../tools.js");
+const _ = require("./tools.js");
 
 const uids = new Set();
 _.define(exports, "generateUID", function (id) {

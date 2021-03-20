@@ -1,4 +1,4 @@
-const _ = require("../tools.js");
+const _ = require("./tools.js");
 const _module = require("./module.js");
 const _decay = 0.01, _delay = 10;
 
