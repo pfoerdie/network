@@ -1,0 +1,19 @@
+{
+  "name": "network",
+  "version": "1.0.0",
+  "description": "> This is the base class and used to create networks of Nodes. Each Node is associated with some data and can be connected with other Nodes. Events can be registered to a Node and might be used to trigger a chain reaction within the network. This way implementations of connected graphs, neural networks, process structures and finite automatons are made easy.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pfoerdie/Network.git"
+  },
+  "author": "pfoerdie@gmail.com",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Pfoerdie/Network/issues"
+  },
+  "homepage": "https://github.com/Pfoerdie/Network#readme"
+}

@@ -1,5 +1,5 @@
 const
-    UUID = require("uuid/v4"),
+    UUID = require("uuid").v4,
     Colors = require("colors"),
     _package = require("./index.js");
 

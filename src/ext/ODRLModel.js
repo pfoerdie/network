@@ -34,7 +34,31 @@ model.define(class Rule extends _ext.Entity {
 
 });
 
+model.define(class Action extends _ext.Entity {
+
+});
+
 model.define(class Constraint extends _ext.Entity {
+
+});
+
+model.define(class Operator extends _ext.Entity {
+
+});
+
+model.define(class LeftOperand extends _ext.Entity {
+
+});
+
+model.define(class RightOperand extends _ext.Entity {
+
+});
+
+model.define(class LogicalConstraint extends _ext.Entity {
+
+});
+
+model.define(class LogicalOperator extends _ext.Entity {
 
 });
 
